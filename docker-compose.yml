@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  pollinations-proxy:
+    build: .
+    container_name: pollinations-proxy
+    ports:
+      - "3000:3000"
+    environment:
+      - POLLINATIONS_REFRESH_TOKEN=${POLLINATIONS_REFRESH_TOKEN:?err}
+    restart: unless-stopped

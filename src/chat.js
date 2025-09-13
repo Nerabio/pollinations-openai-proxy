@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 
 const TOKEN = process.env.TOKEN ?? "***";
 const BASE_URL = process.env.BASE_URL ?? "https://text.pollinations.ai/openai";
+const DEBUG = process.env.DEBUG ?? false;
 
 export async function chatCompletion(req, res) {
   const { messages, model, stream = false } = req.body;
@@ -19,6 +20,10 @@ export async function chatCompletion(req, res) {
     model,
     stream,
   };
+
+  if (DEBUG) {
+    console.log("Payload:", payload);
+  }
 
   const resp = await fetch(`${BASE_URL}`, {
     method: "POST",
