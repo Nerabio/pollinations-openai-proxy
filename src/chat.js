@@ -5,7 +5,13 @@ const BASE_URL = process.env.BASE_URL ?? "https://text.pollinations.ai/openai";
 const DEBUG = process.env.DEBUG ?? false;
 
 export async function chatCompletion(req, res) {
-  const { messages, model, stream = false } = req.body;
+  const {
+    messages,
+    model,
+    tools = [],
+    tool_choice = "auto",
+    stream = false,
+  } = req.body;
 
   if (!TOKEN) {
     return res
@@ -19,6 +25,8 @@ export async function chatCompletion(req, res) {
     messages: messages.map((m) => ({ role: m.role, content: m.content })),
     model,
     stream,
+    tools,
+    tool_choice,
   };
 
   if (DEBUG) {
@@ -55,6 +63,9 @@ export async function chatCompletion(req, res) {
 
   /* ---------- ОБЫЧНЫЙ ОТВЕТ ---------- */
   const data = await resp.json();
+  if (DEBUG) {
+    console.log("Response:", data);
+  }
   const content = data.text || data.choices?.[0]?.message?.content || "";
 
   res.json({
